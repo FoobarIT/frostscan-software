@@ -4,6 +4,28 @@
 Create a simple disk exploration and analysis tool.
 
 ---
+## v0.0.3 - Polish, Stability & User Experience
+### Features
+- [ ] Add a settings page for user preferences
+- [ ] Add a light mode theme
+- [ ] Add a file type filter for the Tree Map
+- [ ] Add duplication detection and visualization
+### Core
+- [ ] Refactor the UI to use a more modular component structure
+- [ ] Improve error handling and user feedback for failed scans
+- [ ] Add support for scanning network drives and external storage
+- [ ] Dictated module test file structure and naming conventions.
+### Performance
+- [ ] Optimize Tree Map rendering for large datasets
+- [ ] Implement lazy loading for directory contents in the Tree Map
+- [ ] Add caching of scan results to speed up subsequent scans
+### Quality
+- [ ] Add end-to-end tests for the entire scanning and visualization workflow
+- [ ] Add performance benchmarks for scanning and rendering
+- [ ] Get user feedback and iterate on the UI/UX design
+### CI / Project setup
+- [ ] Investigate for failure CI runs and fix them.
+- [ ] Add script helper for checking crate versions. 
 
 ## v0.0.2 — Usability, Analysis & Infrastructure
 

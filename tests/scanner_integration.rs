@@ -104,16 +104,19 @@ fn cancelled_scan_stops_without_emitting_results() {
 #[cfg(unix)]
 #[test]
 fn symlinked_entries_produce_partial_scan_warning() {
-    use std::os::unix::fs::symlink;
     use frostscan::services::scanner::ScanFailureKind;
+    use std::os::unix::fs::symlink;
 
     let root = unique_temp_dir("symlink-scan");
     let target = root.join("target");
-    let linked = root.join("linked-dir");
+    let real_dir = root.join("real-dir");
+    let linked = target.join("linked-dir");
 
     fs::create_dir(&target).unwrap();
+    fs::create_dir(&real_dir).unwrap();
     fs::write(target.join("payload.txt"), vec![0_u8; 7]).unwrap();
-    symlink(&target, &linked).unwrap();
+    fs::write(real_dir.join("nested.txt"), vec![0_u8; 3]).unwrap();
+    symlink(&real_dir, &linked).unwrap();
 
     let entries = list_directory(root.clone()).unwrap();
     let (tx, rx) = unbounded();
@@ -121,13 +124,20 @@ fn symlinked_entries_produce_partial_scan_warning() {
 
     compute_directory_sizes_async(entries, tx, cancel);
 
-    let event = rx.recv_timeout(Duration::from_secs(2)).unwrap();
-    let DirSizeEvent::Done(result) = event else {
-        panic!("expected successful scan event");
+    let result = loop {
+        let event = rx.recv_timeout(Duration::from_secs(2)).unwrap();
+        let DirSizeEvent::Done(result) = event else {
+            panic!("expected successful scan event");
+        };
+
+        if result.path == target {
+            break result;
+        }
     };
 
     assert!(result.partial);
     assert_eq!(result.issue, Some(ScanFailureKind::SymlinkSkipped));
+    assert_eq!(result.size, 7);
 
     fs::remove_dir_all(root).unwrap();
 }
