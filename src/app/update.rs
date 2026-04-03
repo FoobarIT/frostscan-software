@@ -286,11 +286,21 @@ impl FrostScanApp {
 #[cfg(test)]
 mod tests {
     use std::path::PathBuf;
+    use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
     use crate::app::notice::{AppNotice, NoticeLevel, NoticeSource};
     use crate::app::state::{CachedDirectory, FrostScanApp};
     use crate::i18n::TextKey;
     use crate::model::scan_node::ScanNode;
+
+    fn unique_missing_path(label: &str) -> PathBuf {
+        let suffix = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap_or_else(|_| Duration::from_secs(0))
+            .as_nanos();
+
+        std::env::temp_dir().join(format!("frostscan-missing-{label}-{suffix}"))
+    }
 
     #[test]
     fn clears_sticky_navigation_notice_after_successful_navigation() {
@@ -346,9 +356,10 @@ mod tests {
     fn failed_open_clears_previous_scan_tree() {
         let (mut app, _) = FrostScanApp::new();
         app.scan_tree = Some(ScanNode::new_directory(PathBuf::from("old")));
+        let missing_path = unique_missing_path("open-directory");
 
         app.open_directory(
-            PathBuf::from("Z:\\definitely-missing-frostscan-path"),
+            missing_path,
             crate::app::state::Tab::Explorer,
             true,
         );
