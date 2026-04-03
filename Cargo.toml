@@ -1,0 +1,14 @@
+[package]
+name = "frostscan"
+version = "0.1.0"
+edition = "2024"
+
+
+[dependencies]
+iced = { version = "0.14", features = ["tokio", "svg", "canvas"] }
+crossbeam-channel = "0.5"
+sysinfo = "0.38"
+thiserror = "2"
+tracing = { version = "0.1", features = ["attributes"] }
+tracing-subscriber = { version = "0.3", features = ["env-filter", "fmt"] }
+treemap = "0.3.2"
