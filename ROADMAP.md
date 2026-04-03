@@ -14,8 +14,7 @@ Create a simple disk exploration and analysis tool.
 - [ ] Refactor the UI to use a more modular component structure
 - [ ] Improve error handling and user feedback for failed scans
 - [ ] Add support for scanning network drives and external storage
-- [ ] Dictated module text file structure and naming conventions.
-
+- [ ] Dictated module test file structure and naming conventions.
 ### Performance
 - [ ] Optimize Tree Map rendering for large datasets
 - [ ] Implement lazy loading for directory contents in the Tree Map
